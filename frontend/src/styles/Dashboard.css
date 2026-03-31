@@ -1,0 +1,141 @@
+.app {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.dashboard h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 1rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-section {
+  background-color: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.dashboard-section.full-width {
+  grid-column: 1 / -1;
+}
+
+.dashboard-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.market-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.market-table thead {
+  background-color: rgba(26, 115, 232, 0.1);
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.market-table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.market-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.market-table tbody tr:hover {
+  background-color: rgba(26, 115, 232, 0.05);
+}
+
+.market-table .symbol {
+  font-weight: 700;
+  color: var(--color-primary);
+  min-width: 80px;
+}
+
+.market-table .price {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.market-table .change {
+  font-weight: 600;
+}
+
+.market-table .percent {
+  font-weight: 700;
+}
+
+.market-table tr.positive .change,
+.market-table tr.positive .percent {
+  color: var(--color-success);
+}
+
+.market-table tr.negative .change,
+.market-table tr.negative .percent {
+  color: var(--color-danger);
+}
+
+.full-width-table {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.dashboard-loading,
+.dashboard-error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+}
+
+.dashboard-error {
+  color: var(--color-danger);
+}
+
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1rem;
+  }
+
+  .dashboard h1 {
+    font-size: 1.75rem;
+  }
+
+  .market-table {
+    font-size: 0.85rem;
+  }
+
+  .market-table th,
+  .market-table td {
+    padding: 0.5rem;
+  }
+}

@@ -1,11 +1,54 @@
-services:
-backend:
-build: ./backend
-ports:
+version: '3.8'
 
-"8000:8000"
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: nepse_db
+    environment:
+      POSTGRES_USER: nepse_user
+      POSTGRES_PASSWORD: nepse_password
+      POSTGRES_DB: nepse_intelligence
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nepse_user -d nepse_intelligence"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: nepse_backend
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql://nepse_user:nepse_password@db:5432/nepse_intelligence
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: nepse_frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+    environment:
+      - VITE_API_URL=http://backend:8000
+    restart: unless-stopped
+
 volumes:
-./backend:/app
-environment:
-ENVIRONMENT=development
-restart: unless-stopped
+  postgres_data:
+
