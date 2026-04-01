@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from app.database import get_db
 from app.models import Stock, Index, MarketData, IndexHistory, TradingSignal
 from app.schemas import StockResponse, IndexResponse, MarketDataPoint, TradingSignalResponse
+from app.pipeline import get_pipeline
 
 router = APIRouter(prefix="/api", tags=["market"])
 
@@ -131,3 +132,24 @@ def get_market_summary(db: Session = Depends(get_db)):
         "last_stock_update": latest_stock.updated_at if latest_stock else None,
         "last_index_update": latest_index.updated_at if latest_index else None,
     }
+
+
+@router.get("/pipeline-health")
+def get_pipeline_health():
+    """Get NEPSE API pipeline health status."""
+    pipeline = get_pipeline()
+    health = pipeline.get_api_health()
+    
+    # Add cache availability info
+    db = next(get_db())
+    try:
+        stock_count = db.query(func.count(Stock.id)).scalar()
+        index_count = db.query(func.count(Index.id)).scalar()
+        
+        health["cache_available"] = stock_count > 0 or index_count > 0
+        health["cached_stocks"] = stock_count
+        health["cached_indices"] = index_count
+    finally:
+        db.close()
+    
+    return health
