@@ -1,6 +1,6 @@
 """SQLAlchemy ORM models for NEPSE Intelligence."""
 
-from sqlalchemy import Column, Integer, String, Numeric, DateTime, BigInteger, ForeignKey, Index
+from sqlalchemy import Column, Integer, String, Numeric, DateTime, BigInteger, ForeignKey, Index as SQLIndex
 from sqlalchemy.sql import func
 from datetime import datetime
 from app.database import Base
@@ -47,8 +47,8 @@ class MarketData(Base):
     timestamp = Column(DateTime, default=datetime.utcnow, index=True)
 
     __table_args__ = (
-        Index("idx_market_data_symbol", "symbol"),
-        Index("idx_market_data_timestamp", "timestamp"),
+        SQLIndex("idx_market_data_symbol", "symbol"),
+        SQLIndex("idx_market_data_timestamp", "timestamp"),
     )
 
 
@@ -64,7 +64,7 @@ class IndexHistory(Base):
     timestamp = Column(DateTime, default=datetime.utcnow, index=True)
 
     __table_args__ = (
-        Index("idx_index_history_timestamp", "timestamp"),
+        SQLIndex("idx_index_history_timestamp", "timestamp"),
     )
 
 
@@ -80,5 +80,5 @@ class TradingSignal(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     __table_args__ = (
-        Index("idx_trading_signals_symbol", "symbol"),
+        SQLIndex("idx_trading_signals_symbol", "symbol"),
     )
